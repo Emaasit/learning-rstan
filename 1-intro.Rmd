@@ -43,3 +43,9 @@ install.packages("rstan", dependencies = TRUE)
 ## If all else fails, you can try to install rstan from source via
 install.packages("rstan", type = "source")
 ```
+
+## Examples
+You can run many of the BUGS examples and some others that we have created in Stan by executing
+```{r Examples}
+model <- stan_demo()
+```

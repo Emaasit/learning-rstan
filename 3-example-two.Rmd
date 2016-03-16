@@ -1,0 +1,22 @@
+---
+title: "The Rats example"
+author: "Daniel Emaasit"
+date: "March 16, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+## Example Two: Rats
+
+The Rats example is also a popular example. For example, we can find the [OpenBUGS](http://www.openbugs.net/) version from [here](http://www.openbugs.net/Examples/Rats.html), which originally is from Gelfand et al (1990). The data are about the growth of 30 rats weekly for five weeks. In the following table, we list the data, in which we use x to denote the dates the data were collected. We can try this example using the linked data [rats.txt](https://raw.github.com/wiki/stan-dev/rstan/rats.txt) and model code [rats.stan](https://raw.githubusercontent.com/stan-dev/example-models/master/bugs_examples/vol1/rats/rats.stan).
+```{r Rats}
+y <- read.table('https://raw.github.com/wiki/stan-dev/rstan/rats.txt', header = TRUE)
+x <- c(8, 15, 22, 29, 36)
+xbar <- mean(x)
+N <- nrow(y)
+T <- ncol(y)
+rats_fit <- stan(file = 'https://raw.githubusercontent.com/stan-dev/example-models/master/bugs_examples/vol1/rats/rats.stan')
+```

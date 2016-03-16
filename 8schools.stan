@@ -1,3 +1,5 @@
+// First, we specify this model in a file called 8schools.stan as follows
+
 data {
   int<lower=0> J; // number of schools 
   real y[J]; // estimated treatment effects
