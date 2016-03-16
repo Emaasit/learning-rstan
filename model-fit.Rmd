@@ -1,0 +1,47 @@
+---
+title: "Untitled"
+author: "Daniel Emaasit"
+date: "March 16, 2016"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
+```
+
+## Eight Schools Example
+This is an example in Section 5.5 of Gelman et al (2003), which studied coaching effects from eight schools. For simplicity, we call this example "eight schools."
+
+In this model, we let theta be transformed parameters of mu and eta instead of directly declaring theta as parameters. By parameterizing this way, the sampler will run more efficiently. Assuming we have 8schools.stan file in our working directory, we can prepare the data and fit the model as the following R code shows.
+
+```{r data_and_fitModel}
+schools_dat <- list(J = 8, 
+                    y = c(28,  8, -3,  7, -1,  1, 18, 12),
+                    sigma = c(15, 10, 16, 11,  9, 11, 10, 18))
+
+fit <- stan(file = '8schools.stan', data = schools_dat, 
+            iter = 1000, chains = 4)
+```
+
+## Model Results
+We can also specify a Stan model using a character string by using argument model_code of function stan instead. However, this is not recommended.
+
+The object fit, returned from function stan is an S4 object of class stanfit. Methods such as print, plot, and pairs are associated with the fitted result so we can use the following code to check out the results in fit. print provides a summary for the parameter of the model as well as the log-posterior with name lp__ (see the following example output). For more methods and details of class stanfit, see the help of class stanfit.
+
+In particular, we can use extract function on stanfit objects to obtain the samples. extract extracts samples from the stanfit object as a list of arrays for parameters of interest, or just an array. In addition, S3 functions as.array and as.matrix are defined for stanfit object (using help("as.array.stanfit") to check out the help document in R).
+```{r model_results}
+print(fit)
+plot(fit)
+pairs(fit, pars = c("mu", "tau", "lp__"))
+
+la <- extract(fit, permuted = TRUE) # return a list of arrays 
+mu <- la$mu 
+
+### return an array of three dimensions: iterations, chains, parameters 
+a <- extract(fit, permuted = FALSE) 
+
+### use S3 functions as.array (or as.matrix) on stanfit objects
+a2 <- as.array(fit)
+m <- as.matrix(fit)
+```
+

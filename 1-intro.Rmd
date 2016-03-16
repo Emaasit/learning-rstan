@@ -6,9 +6,40 @@ output: html_document
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
 ## Introduction
 
 User-facing R functions are provided by this package to parse, compile, test, estimate, and analyze Stan models by accessing the header-only Stan library provided by the 'StanHeaders' package. The Stan project develops a probabilistic programming language that implements full Bayesian statistical inference via Markov Chain Monte Carlo, rough Bayesian inference via variational approximation, and (optionally penalized) maximum likelihood estimation via optimization. In all three cases, automatic differentiation is used to quickly and accurately evaluate gradients without burdening the user with the need to derive the partial derivatives.
+
+## Configuration
+Create a personla Makevars
+```{r Config_Part 1}
+dotR <- file.path(Sys.getenv("HOME"), ".R")
+if (!file.exists(dotR)) dir.create(dotR)
+M <- file.path(dotR, "Makevars")
+if (!file.exists(M)) file.create(M)
+cat("\nCXXFLAGS=-O3 -Wno-unused-variable -Wno-unused-function", 
+    file = M, sep = "\n", append = TRUE)
+```
+
+Finally, if using g++ version 4.9 or higher (which is rare, except on Linux), we recommend executing in R
+```{r Config_Part 2}
+cat("\nCXXFLAGS+=-flto -ffat-lto-objects  -Wno-unused-local-typedefs", 
+    file = M, sep = "\n", append = TRUE)
+```
+
+verify that the configuration is correct by executing
+```{r Verify}
+cat(readLines(M), sep = "\n")
+```
+
+## Install RStan
+```{r install_RStan}
+options(repos = "https://cran.r-project.org")
+install.packages("rstan", dependencies = TRUE)
+
+## If all else fails, you can try to install rstan from source via
+install.packages("rstan", type = "source")
+```
