@@ -1,5 +1,5 @@
 ---
-title: "An example in Section 5.5 of Gelman et al (2003), which studied coaching effects from eight schools"
+title: "Bernoulli Parameters in Example in JSM paper"
 author: "Daniel Emaasit"
 date: "March 16, 2016"
 output: html_document
@@ -9,17 +9,15 @@ output: html_document
 knitr::opts_chunk$set(echo = TRUE, eval = FALSE)
 ```
 
-## Eight Schools Example
+## Bernoulli
 This is an example in Section 5.5 of Gelman et al (2003), which studied coaching effects from eight schools. For simplicity, we call this example "eight schools."
 
 In this model, we let `theta` be transformed parameters of `mu` and `eta` instead of directly declaring `theta` as parameters. By parameterizing this way, the sampler will run more efficiently. Assuming we have `8schools.stan` file in our working directory, we can prepare the data and fit the model as the following R code shows.
 
 ```{r data_and_fitModel}
-schools_dat <- list(J = 8, 
-                    y = c(28,  8, -3,  7, -1,  1, 18, 12),
-                    sigma = c(15, 10, 16, 11,  9, 11, 10, 18))
+bern_dat <- list(N = 10, y = c(0,1,0,0,0,0,0,0,0,1))
 
-fit <- stan(file = '8schools.stan', data = schools_dat, 
+fit <- stan(file = 'bernoulli.stan', data = bern_dat, 
             iter = 1000, chains = 4, save_dso = TRUE)
 ```
 
@@ -63,4 +61,3 @@ ggmcmc::ggmcmc(D = samples, file = NULL, plot = 'ggs_compare_partial')
 ## look at the autocorrelations
 ggmcmc::ggmcmc(D = samples, file = NULL, plot = 'ggs_autocorrelation')
 ```
-
