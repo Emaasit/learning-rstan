@@ -14,24 +14,31 @@ This is an example in Section 5.5 of Gelman et al (2003), which studied coaching
 
 In this model, we let `theta` be transformed parameters of `mu` and `eta` instead of directly declaring `theta` as parameters. By parameterizing this way, the sampler will run more efficiently. Assuming we have `8schools.stan` file in our working directory, we can prepare the data and fit the model as the following R code shows.
 
-```{r data_and_fitModel}
+## Preparing the data
+Stan accepts data as a list. It's encouraged to read in the data from a file rather than to directly enter the numbers in the R script.
+
+```{r preparing_the_data}
 schools_dat <- list(J = 8, 
                     y = c(28,  8, -3,  7, -1,  1, 18, 12),
                     sigma = c(15, 10, 16, 11,  9, 11, 10, 18))
 
+```
+
+## Sample from the posterior distribution
+Use the **stan** function to wrap 3 operations together.
+
+```{r perform_inference}
 fit <- stan(file = '8schools.stan', data = schools_dat, 
             iter = 1000, chains = 4, save_dso = TRUE)
 ```
 
 ## Model Results
-We can also specify a Stan model using a character string by using argument `model_code` of function stan instead. However, this is not recommended.
-
 The object `fit`, returned from function stan is an S4 object of class `stanfit`. Methods such as `print`, `plot`, and `pairs` are associated with the fitted result so we can use the following code to check out the results in fit.   
 
 * `print` provides a summary for the parameter of the model as well as the log-posterior with name lp__ (see the following example output).   
 * For more methods and details of class `stanfit`, see the help of class stanfit.
 
-In particular, we can use `extract` function on `stanfit` objects to obtain the samples. extract extracts samples from the stanfit object as a list of arrays for parameters of interest, or just an array. In addition, S3 functions `as.array` and `as.matrix` are defined for `stanfit` object (using `help("as.array.stanfit")` to check out the help document in R).
+In particular, we can use `extract` function on `stanfit` objects to obtain the samples. `extract` extracts samples from the stanfit object as a list of arrays for parameters of interest, or just an array. In addition, S3 functions `as.array` and `as.matrix` are defined for `stanfit` object (using `help("as.array.stanfit")` to check out the help document in R).
 ```{r model_results}
 print(fit)
 plot(fit)
